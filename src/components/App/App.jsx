@@ -3,17 +3,15 @@ import React from 'react';
 
 function App() {
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <p>
-          Edit <code>src/App.jsx</code> and save to reload.
-        </p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer' > Learn React</a>
-      </header>
+    <div>
+      <h1>Ja<span className="highlight">mmm</span>ing</h1>
+      <div className="App">
+        {/* <!-- Add a SearchBar component --> */}
+        <div className="App-playlist">
+          {/* <!-- Add a SearchResults component --> */}
+          {/* <!-- Add a Playlist component --> */}
+        </div>
+      </div>
     </div>
   );
 }
