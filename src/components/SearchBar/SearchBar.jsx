@@ -11,6 +11,8 @@ class SearchBar extends React.Component {
             value: ''
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     } g
 
     handleChange(event) {
@@ -24,13 +26,13 @@ class SearchBar extends React.Component {
             // TODO: Submit the search query
             console.log('key: ', event.key);
             // TODO: Call Search
-            console.log("call search!")
+            console.log("call search: ", this.state.value)
         }
     }
 
     handleClick(e) {
         // TODO: Call Search
-        console.log("call search!")
+        console.log("call search: ", this.state.value)
     }
 
     render() {
