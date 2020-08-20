@@ -13,6 +13,10 @@ class SearchBar extends React.Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    componentDidMount() {
+        this.searchBarInput.focus();
+    }
+
     handleChange(event) {
         this.setState({
             value: event.target.value
@@ -41,6 +45,7 @@ class SearchBar extends React.Component {
                 <input
                     placeholder="Enter A Song, Album, or Artist"
                     value={this.state.value}
+                    ref={(input) => { this.searchBarInput = input; }}
                     onChange={this.handleChange}
                     onKeyDown={this.handleKeyDown}
                 />
