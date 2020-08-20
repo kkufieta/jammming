@@ -38,27 +38,58 @@ const Spotify = {
 
   async getUserId() {
     this.getAccessToken();
-    const response = await fetch('https://api.spotify.com/v1/me', {
-      method: 'get',
-      headers: new Headers({
-        Authorization: `Bearer ${accessToken}`,
-      })
-    });
-    const data = await response.json();
-    return data.id
+    try {
+      const response =
+          await fetch('https://api.spotify.com/v1/me', {
+            method: 'get',
+            headers: new Headers({
+              Authorization: `Bearer ${accessToken}`,
+            })
+          }).catch((networkError) => {console.error(networkError)});
+      if (response.ok) {
+        const json_response = await response.json();
+        if ('id' in json_response) {
+          return json_response.id;
+        }
+        throw new Error('JSON response does not have the key "id".');
+      }
+      throw new Error('Request failed.');
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   async search(term) {
-    const url =
-        `${searchUrl}?q=${term}&type=album,artist,track&limit=10&offset=5`
-    const response = await fetch(url, {
-      method: 'get',
-      headers: new Headers({
-        Authorization: `Bearer ${accessToken}`,
-      })
-    });
-    const data = await response.json();
-    return data;
+    const url = `${searchUrl}?q=${term}&type=track&limit=10`;
+    try {
+      const response = await fetch(url, {
+                         method: 'get',
+                         headers: new Headers({
+                           Authorization: `Bearer ${accessToken}`,
+                         })
+                       }).catch((networkError) => {
+        console.error(networkError);
+      });
+
+      if (response.ok) {
+        const json_response = await response.json();
+        if ('tracks' in json_response && 'items' in json_response.tracks) {
+          const track_list = json_response.tracks.items.map((track) => {
+            return {
+              id: track.id,
+              track: track.name,
+              artist: track.artists[0].name,
+              album: track.album.name
+            };
+          });
+          return track_list;
+        }
+        throw new Error('JSON response does not have the key "tracks.items".');
+      }
+      throw new Error('Request failed.');
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 

@@ -1,9 +1,6 @@
 import React from 'react';
 import './SearchBar.css'
 import Spotify from '../../util/Spotify.js';
-// Searchbar: take input, when user hits enter or clicks the button:
-// fetch the data from the spotify API
-// for now: console.log the data.
 
 class SearchBar extends React.Component {
     constructor(props) {
@@ -24,26 +21,18 @@ class SearchBar extends React.Component {
 
     handleKeyDown(event) {
         if (event.key === 'Enter') {
-            // TODO: Submit the search query
-            console.log('key: ', event.key);
-            // TODO: Call Search
-            console.log("call search: ", this.state.value)
             this.search();
         }
     }
 
     handleClick(e) {
-        // TODO: Call Search
-        console.log("call search: ", this.state.value)
         this.search();
     }
 
     async search() {
-
         const userId = await Spotify.getUserId();
-        console.log(userId);
-        const searchResult = await Spotify.search('rihanna');
-        console.log(searchResult);
+        const searchResult = await Spotify.search(this.state.value);
+        this.props.updateSearchResult(searchResult)
     }
 
     render() {
