@@ -15,7 +15,6 @@ class App extends React.Component {
   }
 
   updateSearchResult(newSearchResult) {
-    console.log('In App, updating searchResult: ', newSearchResult);
     this.setState({
       searchResult: newSearchResult
     });

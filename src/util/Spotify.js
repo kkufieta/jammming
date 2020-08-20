@@ -77,7 +77,7 @@ const Spotify = {
           const track_list = json_response.tracks.items.map((track) => {
             return {
               id: track.id,
-              track: track.name,
+              name: track.name,
               artist: track.artists[0].name,
               album: track.album.name
             };
