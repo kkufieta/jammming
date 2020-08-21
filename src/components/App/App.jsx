@@ -8,15 +8,24 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchResult: []
+      searchResult: [],
+      playlistName: 'New Playlist',
+      playlistTracks: []
     };
 
     this.updateSearchResult = this.updateSearchResult.bind(this);
+    this.updatePlaylistName = this.updatePlaylistName.bind(this);
   }
 
   updateSearchResult(newSearchResult) {
     this.setState({
       searchResult: newSearchResult
+    });
+  }
+
+  updatePlaylistName(newName) {
+    this.setState({
+      playlistName: newName
     });
   }
 
@@ -28,7 +37,10 @@ class App extends React.Component {
           <SearchBar updateSearchResult={this.updateSearchResult} />
           <div className="App-playlist">
             <SearchResult searchResult={this.state.searchResult} />
-            <Playlist />
+            <Playlist
+              playlistName={this.state.playlistName}
+              playlistTracks={this.state.playlistTracks}
+              updateName={this.updatePlaylistName} />
           </div>
         </div>
       </div>
