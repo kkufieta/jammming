@@ -17,6 +17,7 @@ class App extends React.Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.addTrackToPlaylist = this.addTrackToPlaylist.bind(this);
     this.removeTrackFromPlaylist = this.removeTrackFromPlaylist.bind(this);
+    this.resetPlaylist = this.resetPlaylist.bind(this);
   }
 
   updateSearchResult(newSearchResult) {
@@ -52,6 +53,13 @@ class App extends React.Component {
     });
   }
 
+  resetPlaylist() {
+    this.setState({
+      playlistName: 'New Playlist',
+      playlistTracks: []
+    });
+  }
+
   render() {
     return (
       <div>
@@ -66,7 +74,8 @@ class App extends React.Component {
               playlistName={this.state.playlistName}
               playlistTracks={this.state.playlistTracks}
               updateName={this.updatePlaylistName}
-              trackAction={this.removeTrackFromPlaylist} />
+              trackAction={this.removeTrackFromPlaylist}
+              resetPlaylist={this.resetPlaylist} />
           </div>
         </div>
       </div>
