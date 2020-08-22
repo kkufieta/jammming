@@ -34,7 +34,6 @@ class SearchBar extends React.Component {
     }
 
     async search() {
-        const userId = await Spotify.getUserId();
         const searchResult = await Spotify.search(this.state.value);
         this.props.updateSearchResult(searchResult)
     }

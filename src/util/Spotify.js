@@ -2,15 +2,17 @@ import spotifyClientId from './config.js';
 
 const authorizeUrl = 'https://accounts.spotify.com/authorize';
 const redirectUri = 'http://localhost:3000/';
-const scope = 'playlist-modify-private';
 const searchUrl = 'https://api.spotify.com/v1/search';
+const getUserIdUrl = 'https://api.spotify.com/v1/me';
+const scope = 'playlist-modify-private';
 
-let accessToken = '';
 
 const Spotify = {
+  accessToken: '',
+
   getAccessToken() {
-    if (accessToken) {
-      return accessToken;
+    if (this.accessToken) {
+      return this.accessToken;
     }
 
     // Check if the access token is in the URL
@@ -22,12 +24,12 @@ const Spotify = {
     // save the values and return the access token. Otherwise,
     // redirect to the authentication login page.
     if (accessTokenMatch && expiresInMatch) {
-      accessToken = accessTokenMatch[1];
+      this.accessToken = accessTokenMatch[1];
       const expiresIn = Number(expiresInMatch[1]);
       // Clear the accessToken once it expires
-      window.setTimeout(() => accessToken = '', expiresIn * 1000);
+      window.setTimeout(() => this.accessToken = '', expiresIn * 1000);
       window.history.pushState('Access Token', null, '/');
-      return accessToken;
+      return this.accessToken;
     } else {
       const authenticationUrl =
           `${authorizeUrl}?client_id=${spotifyClientId}&redirect_uri=${
@@ -40,10 +42,10 @@ const Spotify = {
     this.getAccessToken();
     try {
       const response =
-          await fetch('https://api.spotify.com/v1/me', {
-            method: 'get',
+          await fetch(getUserIdUrl, {
+            method: 'GET',
             headers: new Headers({
-              Authorization: `Bearer ${accessToken}`,
+              'Authorization': `Bearer ${this.accessToken}`,
             })
           }).catch((networkError) => {console.error(networkError)});
       if (response.ok) {
@@ -60,12 +62,13 @@ const Spotify = {
   },
 
   async search(term) {
-    const url = `${searchUrl}?q=${term}&type=track&limit=10`;
+    this.getAccessToken();
+    const searchTracksUrl = `${searchUrl}?q=${term}&type=track&limit=10`;
     try {
-      const response = await fetch(url, {
-                         method: 'get',
+      const response = await fetch(searchTracksUrl, {
+                         method: 'GET',
                          headers: new Headers({
-                           Authorization: `Bearer ${accessToken}`,
+                           'Authorization': `Bearer ${this.accessToken}`,
                          })
                        }).catch((networkError) => {
         console.error(networkError);
@@ -86,6 +89,63 @@ const Spotify = {
           return track_list;
         }
         throw new Error('JSON response does not have the key "tracks.items".');
+      }
+      throw new Error('Request failed.');
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async createNewPlaylist(name, tracks) {
+    const playlistId = await this.postPlaylist(name);
+    if (tracks.length > 0) {
+      await this.postPlaylistTracks(playlistId, tracks);
+    }
+  },
+
+  async postPlaylist(name) {
+    this.getAccessToken();
+    const user_id = await this.getUserId();
+    const url = `https://api.spotify.com/v1/users/${user_id}/playlists`;
+    try {
+      const response = await fetch(url, {
+                         method: 'POST',
+                         headers: new Headers({
+                           'Authorization': `Bearer ${this.accessToken}`,
+                           'Content-Type': 'application/json'
+                         }),
+                         body: JSON.stringify({name: name, public: false})
+                       }).catch((networkError) => {
+        console.error(networkError);
+      });
+      if (response.ok) {
+        const jsonResponse = await response.json();
+        if ('id' in jsonResponse) {
+          return jsonResponse.id;
+        }
+        throw new Error('JSON response does not have the key "id".');
+      }
+      throw new Error('Request failed.');
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async postPlaylistTracks(playlistId, trackUris) {
+    this.getAccessToken();
+    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+    try {
+      const response =
+          await fetch(url, {
+            method: 'POST',
+            headers: new Headers({
+              'Authorization': `Bearer ${this.accessToken}`,
+              'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({uris: trackUris})
+          }).catch((networkError) => {console.error(networkError)});
+      if (response.ok) {
+        return response;
       }
       throw new Error('Request failed.');
     } catch (error) {
