@@ -1,7 +1,8 @@
 import spotifyClientId from './config.js';
 
-const authorizeUrl = 'https://accounts.spotify.com/authorize';
 const redirectUri = 'http://localhost:3000/';
+
+const authorizeUrl = 'https://accounts.spotify.com/authorize';
 const searchUrl = 'https://api.spotify.com/v1/search';
 const getUserIdUrl = 'https://api.spotify.com/v1/me';
 const scope = 'playlist-modify-private';

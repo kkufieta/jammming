@@ -6,15 +6,15 @@ import Spotify from '../../util/Spotify.js';
 class Playlist extends React.Component {
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleClick = this.handleClick.bind(this);
+        this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleSave = this.handleSave.bind(this);
     }
 
-    handleChange(event) {
+    handleNameChange(event) {
         this.props.updateName(event.target.value);
     }
 
-    handleClick(event) {
+    handleSave(event) {
         this.savePlaylistToSpotify(this.props.playlistName, this.props.playlistTracks.map(track => track.uri));
     }
 
@@ -28,14 +28,14 @@ class Playlist extends React.Component {
             <div className="Playlist">
                 <input
                     value={this.props.playlistName}
-                    onChange={this.handleChange} />
+                    onChange={this.handleNameChange} />
                 <Tracklist
                     trackList={this.props.playlistTracks}
-                    trackAction={this.props.trackAction}
+                    trackAction={this.props.removeTrack}
                     isRemoval={true} />
                 <button
                     className="Playlist-save"
-                    onClick={this.handleClick}>
+                    onClick={this.handleSave}>
                     SAVE TO SPOTIFY
                 </button>
             </div>

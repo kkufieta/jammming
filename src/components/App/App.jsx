@@ -69,12 +69,12 @@ class App extends React.Component {
           <div className="App-playlist">
             <SearchResult
               searchResult={this.state.searchResult}
-              trackAction={this.addTrackToPlaylist} />
+              addTrack={this.addTrackToPlaylist} />
             <Playlist
               playlistName={this.state.playlistName}
               playlistTracks={this.state.playlistTracks}
               updateName={this.updatePlaylistName}
-              trackAction={this.removeTrackFromPlaylist}
+              removeTrack={this.removeTrackFromPlaylist}
               resetPlaylist={this.resetPlaylist} />
           </div>
         </div>
