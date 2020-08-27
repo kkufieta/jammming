@@ -1,5 +1,5 @@
 # Jammming
-Jammming allows a user to search the Spotify database for songs and to easily add the songs into a private playlist in their account.
+Jammming allows a user to search the Spotify database for songs and to easily add the songs into a private playlist in their account. You can test the app live [here](https://kkufieta.github.io/jammming/).
 
 ## For Developers
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
